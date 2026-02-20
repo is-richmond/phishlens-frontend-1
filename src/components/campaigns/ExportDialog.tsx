@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Download, X, FileJson, FileSpreadsheet, Mail, Loader2 } from "lucide-react";
+import {
+	Download,
+	X,
+	FileJson,
+	FileSpreadsheet,
+	Mail,
+	Loader2,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/FormElements";
 import type { ExportFormat } from "@/types";
@@ -56,7 +63,10 @@ export function ExportDialog({ generationIds, onClose }: ExportDialogProps) {
 
 		try {
 			const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
-			const token = typeof window !== "undefined" ? localStorage.getItem("phishlens-token") : null;
+			const token =
+				typeof window !== "undefined"
+					? localStorage.getItem("phishlens-token")
+					: null;
 			const url = `${API_BASE}/v1/export/?format=${selectedFormat}&include_metadata=${includeMetadata}`;
 
 			setProgress("Downloading...");
@@ -71,7 +81,9 @@ export function ExportDialog({ generationIds, onClose }: ExportDialogProps) {
 			});
 
 			if (!response.ok) {
-				const errData = await response.json().catch(() => ({ detail: "Export failed" }));
+				const errData = await response
+					.json()
+					.catch(() => ({ detail: "Export failed" }));
 				throw new Error(errData.detail || "Export failed");
 			}
 
@@ -137,7 +149,8 @@ export function ExportDialog({ generationIds, onClose }: ExportDialogProps) {
 							<span className='font-semibold text-slate-900 dark:text-white'>
 								{generationIds.length}
 							</span>{" "}
-							generation{generationIds.length !== 1 ? "s" : ""} selected for export
+							generation{generationIds.length !== 1 ? "s" : ""} selected for
+							export
 						</p>
 					</div>
 

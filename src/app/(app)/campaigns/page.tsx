@@ -8,7 +8,7 @@ import type { Campaign } from "@/types";
 
 export default function CampaignsPage() {
 	const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(
-		null
+		null,
 	);
 
 	if (selectedCampaign) {

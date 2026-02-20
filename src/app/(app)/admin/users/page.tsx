@@ -1,4 +1,8 @@
+"use client";
+
 import { Users } from "lucide-react";
+import { UserApprovalSection } from "@/components/admin/UserApprovalSection";
+import { UserManagementTable } from "@/components/admin/UserManagementTable";
 
 export default function AdminUsersPage() {
 	return (
@@ -9,9 +13,8 @@ export default function AdminUsersPage() {
 					User Management
 				</h1>
 			</div>
-			<p className='text-slate-500 dark:text-slate-400'>
-				Admin user management — coming in Sprint 3.8.
-			</p>
+			<UserApprovalSection />
+			<UserManagementTable />
 		</div>
 	);
 }

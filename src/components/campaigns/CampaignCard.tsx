@@ -18,7 +18,11 @@ interface CampaignCardProps {
 	onDelete: (campaign: Campaign) => void;
 }
 
-export function CampaignCard({ campaign, onView, onDelete }: CampaignCardProps) {
+export function CampaignCard({
+	campaign,
+	onView,
+	onDelete,
+}: CampaignCardProps) {
 	const genCount = campaign.total_generations ?? 0;
 	const avgScore = campaign.average_score ?? null;
 
@@ -62,7 +66,12 @@ export function CampaignCard({ campaign, onView, onDelete }: CampaignCardProps) 
 				{avgScore !== null && (
 					<div className='flex items-center gap-1.5'>
 						<BarChart3 className='h-3.5 w-3.5 text-slate-400' />
-						<span className={cn("text-xs font-bold tabular-nums", getScoreColor(avgScore))}>
+						<span
+							className={cn(
+								"text-xs font-bold tabular-nums",
+								getScoreColor(avgScore),
+							)}
+						>
 							{avgScore.toFixed(1)}
 						</span>
 						<span className='text-[10px] text-slate-400'>avg score</span>
