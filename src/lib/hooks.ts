@@ -13,6 +13,7 @@ import type {
 	Generation,
 	Campaign,
 	CampaignDetail,
+	CampaignStatistics,
 	AuditLog,
 	PaginatedResponse,
 	AdminStatistics,
@@ -142,6 +143,17 @@ export function useCampaigns(
 export function useCampaign(id: string | null, config?: SWRConfiguration) {
 	return useSWR<CampaignDetail>(
 		id ? `/v1/campaigns/${id}` : null,
+		fetcher,
+		config,
+	);
+}
+
+export function useCampaignStatistics(
+	id: string | null,
+	config?: SWRConfiguration,
+) {
+	return useSWR<CampaignStatistics>(
+		id ? `/v1/campaigns/${id}/statistics` : null,
 		fetcher,
 		config,
 	);

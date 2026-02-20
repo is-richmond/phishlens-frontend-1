@@ -1,6 +1,25 @@
+"use client";
+
+import { useState } from "react";
 import { FolderKanban } from "lucide-react";
+import { CampaignList } from "@/components/campaigns/CampaignList";
+import { CampaignDetailView } from "@/components/campaigns/CampaignDetailView";
+import type { Campaign } from "@/types";
 
 export default function CampaignsPage() {
+	const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(
+		null
+	);
+
+	if (selectedCampaign) {
+		return (
+			<CampaignDetailView
+				campaignId={selectedCampaign.id}
+				onBack={() => setSelectedCampaign(null)}
+			/>
+		);
+	}
+
 	return (
 		<div>
 			<div className='flex items-center gap-3 mb-6'>
@@ -9,9 +28,7 @@ export default function CampaignsPage() {
 					Campaigns
 				</h1>
 			</div>
-			<p className='text-slate-500 dark:text-slate-400'>
-				Campaign management — coming in Sprint 3.7.
-			</p>
+			<CampaignList onViewCampaign={setSelectedCampaign} />
 		</div>
 	);
 }

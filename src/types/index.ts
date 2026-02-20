@@ -156,6 +156,27 @@ export interface CampaignDetail extends Campaign {
 	average_score: number | null;
 }
 
+export interface CampaignStatistics {
+	campaign_id: string;
+	campaign_name: string;
+	total_generations: number;
+	scored_generations: number;
+	scores: {
+		average: number | null;
+		min: number | null;
+		max: number | null;
+		median: number | null;
+	};
+	dimensional_averages: {
+		linguistic_naturalness: number | null;
+		psychological_triggers: number | null;
+		technical_plausibility: number | null;
+		contextual_relevance: number | null;
+	};
+	model_distribution: Record<string, number>;
+	category_distribution: Record<string, number>;
+}
+
 // --- Audit Log ---
 
 export interface AuditLog {
