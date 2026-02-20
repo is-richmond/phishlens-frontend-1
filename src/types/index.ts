@@ -204,3 +204,24 @@ export interface AdminStatistics {
 	campaigns: { total: number };
 	templates: { total: number; predefined: number; custom: number };
 }
+
+// --- Presets ---
+
+export interface PersonaPreset {
+	target_role: string;
+	description: {
+		label: string;
+		context: string;
+	};
+	suggested_department: string;
+}
+
+export interface CategoryPreset {
+	category: PretextCategory;
+	description: {
+		label: string;
+		description: string;
+		tactics: string[];
+	};
+	label: string;
+}

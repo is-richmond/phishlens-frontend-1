@@ -23,28 +23,32 @@ const ACTIONS: QuickAction[] = [
 		description: "Configure a phishing simulation",
 		href: "/scenarios?new=1",
 		icon: FileText,
-		color: "bg-primary-50 dark:bg-primary-500/10 text-primary-600 dark:text-primary-400",
+		color:
+			"bg-primary-50 dark:bg-primary-500/10 text-primary-600 dark:text-primary-400",
 	},
 	{
 		label: "Quick Generate",
 		description: "Generate with default settings",
 		href: "/generate",
 		icon: Zap,
-		color: "bg-warning-50 dark:bg-warning-500/10 text-warning-600 dark:text-warning-400",
+		color:
+			"bg-warning-50 dark:bg-warning-500/10 text-warning-600 dark:text-warning-400",
 	},
 	{
 		label: "View Templates",
 		description: "Browse template library",
 		href: "/templates",
 		icon: BookTemplate,
-		color: "bg-success-50 dark:bg-success-500/10 text-success-600 dark:text-success-400",
+		color:
+			"bg-success-50 dark:bg-success-500/10 text-success-600 dark:text-success-400",
 	},
 	{
 		label: "Campaigns",
 		description: "Manage generation campaigns",
 		href: "/campaigns",
 		icon: FolderKanban,
-		color: "bg-danger-50 dark:bg-danger-500/10 text-danger-600 dark:text-danger-400",
+		color:
+			"bg-danger-50 dark:bg-danger-500/10 text-danger-600 dark:text-danger-400",
 	},
 ];
 

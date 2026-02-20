@@ -63,14 +63,7 @@ export function StatCard({
 						</p>
 					)}
 				</div>
-				<div
-					className={cn(
-						"rounded-lg p-2.5",
-						colorMap[color],
-					)}
-				>
-					{icon}
-				</div>
+				<div className={cn("rounded-lg p-2.5", colorMap[color])}>{icon}</div>
 			</div>
 		</div>
 	);

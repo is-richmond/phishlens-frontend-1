@@ -50,8 +50,8 @@ export default function DashboardPage() {
 			? generationsData.items
 					.filter((g) => g.overall_score !== null)
 					.reduce((sum, g) => sum + (g.overall_score ?? 0), 0) /
-				(generationsData.items.filter((g) => g.overall_score !== null)
-					.length || 1)
+				(generationsData.items.filter((g) => g.overall_score !== null).length ||
+					1)
 			: null);
 
 	const isStatsLoading = scenariosLoading || generationsLoading || statsLoading;
@@ -98,9 +98,7 @@ export default function DashboardPage() {
 						/>
 						<StatCard
 							title='Avg. Realism Score'
-							value={
-								avgScore !== null ? avgScore.toFixed(1) : "—"
-							}
+							value={avgScore !== null ? avgScore.toFixed(1) : "—"}
 							subtitle='Across all generations'
 							icon={<TrendingUp className='w-5 h-5' />}
 							color={

@@ -93,8 +93,7 @@ export function RecentGenerations({
 						<div className='flex items-start justify-between gap-3'>
 							<div className='flex-1 min-w-0'>
 								<p className='text-sm font-medium text-slate-900 dark:text-white truncate'>
-									{gen.generated_subject ||
-										truncate(gen.generated_text, 60)}
+									{gen.generated_subject || truncate(gen.generated_text, 60)}
 								</p>
 								<div className='flex items-center gap-3 mt-1.5'>
 									<span className='inline-flex items-center gap-1 text-xs text-slate-400 dark:text-slate-500'>

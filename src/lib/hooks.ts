@@ -16,6 +16,8 @@ import type {
 	AuditLog,
 	PaginatedResponse,
 	AdminStatistics,
+	PersonaPreset,
+	CategoryPreset,
 } from "@/types";
 
 // --- Generic fetcher ---
@@ -223,11 +225,19 @@ export function useDashboardActivity(config?: SWRConfiguration) {
 // --- Persona & Category presets ---
 
 export function usePersonaPresets(config?: SWRConfiguration) {
-	return useSWR("/v1/scenarios/presets/personas", fetcher, config);
+	return useSWR<PersonaPreset[]>(
+		"/v1/scenarios/presets/personas",
+		fetcher,
+		config,
+	);
 }
 
 export function useCategoryPresets(config?: SWRConfiguration) {
-	return useSWR("/v1/scenarios/presets/categories", fetcher, config);
+	return useSWR<CategoryPreset[]>(
+		"/v1/scenarios/presets/categories",
+		fetcher,
+		config,
+	);
 }
 
 // --- Supported models ---

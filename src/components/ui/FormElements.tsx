@@ -215,3 +215,131 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 	},
 );
 Checkbox.displayName = "Checkbox";
+
+/* ────────────────────────────────────────────────────────────
+   FormTextarea — a styled <textarea> with label, error
+   ──────────────────────────────────────────────────────────── */
+
+export interface FormTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+	label: string;
+	error?: string;
+	hint?: string;
+}
+
+export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
+	({ label, error, hint, className, id, ...props }, ref) => {
+		const textareaId = id || label.toLowerCase().replace(/\s+/g, "-");
+
+		return (
+			<div className='space-y-1.5'>
+				<label
+					htmlFor={textareaId}
+					className='block text-sm font-medium text-slate-700 dark:text-slate-300'
+				>
+					{label}
+				</label>
+				<textarea
+					ref={ref}
+					id={textareaId}
+					className={cn(
+						"w-full rounded-lg border bg-white dark:bg-slate-700 px-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 outline-none transition-colors resize-y min-h-[80px]",
+						error
+							? "border-danger-500 focus:border-danger-500 focus:ring-2 focus:ring-danger-500/20"
+							: "border-slate-300 dark:border-slate-600 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20",
+						className,
+					)}
+					aria-invalid={!!error}
+					aria-describedby={
+						error
+							? `${textareaId}-error`
+							: hint
+								? `${textareaId}-hint`
+								: undefined
+					}
+					{...props}
+				/>
+				{hint && !error && (
+					<p
+						id={`${textareaId}-hint`}
+						className='text-xs text-slate-500 dark:text-slate-400'
+					>
+						{hint}
+					</p>
+				)}
+				{error && (
+					<p
+						id={`${textareaId}-error`}
+						role='alert'
+						className='text-xs text-danger-600 dark:text-danger-400'
+					>
+						{error}
+					</p>
+				)}
+			</div>
+		);
+	},
+);
+FormTextarea.displayName = "FormTextarea";
+
+/* ────────────────────────────────────────────────────────────
+   FormSelect — a styled <select> with label, error
+   ──────────────────────────────────────────────────────────── */
+
+export interface FormSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+	label: string;
+	error?: string;
+	options: { value: string; label: string }[];
+	placeholder?: string;
+}
+
+export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
+	({ label, error, options, placeholder, className, id, ...props }, ref) => {
+		const selectId = id || label.toLowerCase().replace(/\s+/g, "-");
+
+		return (
+			<div className='space-y-1.5'>
+				<label
+					htmlFor={selectId}
+					className='block text-sm font-medium text-slate-700 dark:text-slate-300'
+				>
+					{label}
+				</label>
+				<select
+					ref={ref}
+					id={selectId}
+					className={cn(
+						"w-full rounded-lg border bg-white dark:bg-slate-700 px-4 py-2.5 text-sm text-slate-900 dark:text-white outline-none transition-colors appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20fill%3D%22none%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%3E%3Cpath%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:20px] bg-[right_8px_center] bg-no-repeat pr-10",
+						error
+							? "border-danger-500 focus:border-danger-500 focus:ring-2 focus:ring-danger-500/20"
+							: "border-slate-300 dark:border-slate-600 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20",
+						className,
+					)}
+					aria-invalid={!!error}
+					aria-describedby={error ? `${selectId}-error` : undefined}
+					{...props}
+				>
+					{placeholder && (
+						<option value='' disabled>
+							{placeholder}
+						</option>
+					)}
+					{options.map((opt) => (
+						<option key={opt.value} value={opt.value}>
+							{opt.label}
+						</option>
+					))}
+				</select>
+				{error && (
+					<p
+						id={`${selectId}-error`}
+						role='alert'
+						className='text-xs text-danger-600 dark:text-danger-400'
+					>
+						{error}
+					</p>
+				)}
+			</div>
+		);
+	},
+);
+FormSelect.displayName = "FormSelect";

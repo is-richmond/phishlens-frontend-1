@@ -133,18 +133,14 @@ export function ActivityFeed({ logs, isLoading }: ActivityFeedProps) {
 			</div>
 			<div className='divide-y divide-slate-100 dark:divide-slate-700/50'>
 				{logs.map((log) => {
-					const config =
-						ACTION_CONFIG[log.action_type] || DEFAULT_CONFIG;
+					const config = ACTION_CONFIG[log.action_type] || DEFAULT_CONFIG;
 					const Icon = config.icon;
 					const label =
 						ACTION_CONFIG[log.action_type]?.label ||
 						log.action_type.replace(/_/g, " ");
 
 					return (
-						<div
-							key={log.id}
-							className='flex items-start gap-3 p-4'
-						>
+						<div key={log.id} className='flex items-start gap-3 p-4'>
 							<div
 								className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700/50 ${config.color}`}
 							>
