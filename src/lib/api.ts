@@ -2,6 +2,7 @@
  * PhishLens API Client
  *
  * Centralized HTTP client for communicating with the FastAPI backend.
+ * Supports JWT auth via Authorization header and token auto-injection.
  */
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
@@ -15,6 +16,12 @@ class ApiClient {
 
 	constructor(baseUrl: string) {
 		this.baseUrl = baseUrl;
+	}
+
+	/** Get the stored auth token */
+	private getToken(): string | null {
+		if (typeof window === "undefined") return null;
+		return localStorage.getItem("phishlens-token");
 	}
 
 	private buildUrl(
@@ -32,16 +39,26 @@ class ApiClient {
 		return url.toString();
 	}
 
-	async request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+	async request<T>(
+		path: string,
+		options: RequestOptions = {},
+		tokenOverride?: string,
+	): Promise<T> {
 		const { params, ...fetchOptions } = options;
 		const url = this.buildUrl(path, params);
 
+		const token = tokenOverride || this.getToken();
+		const headers: Record<string, string> = {
+			"Content-Type": "application/json",
+			...(fetchOptions.headers as Record<string, string>),
+		};
+		if (token) {
+			headers["Authorization"] = `Bearer ${token}`;
+		}
+
 		const response = await fetch(url, {
 			credentials: "include",
-			headers: {
-				"Content-Type": "application/json",
-				...fetchOptions.headers,
-			},
+			headers,
 			...fetchOptions,
 		});
 
@@ -62,19 +79,27 @@ class ApiClient {
 	get<T>(
 		path: string,
 		params?: Record<string, string | number | boolean | undefined>,
+		tokenOverride?: string,
 	) {
-		return this.request<T>(path, { method: "GET", params });
+		return this.request<T>(path, { method: "GET", params }, tokenOverride);
 	}
 
-	post<T>(path: string, body?: unknown) {
-		return this.request<T>(path, {
-			method: "POST",
-			body: JSON.stringify(body),
-		});
+	post<T>(path: string, body?: unknown, tokenOverride?: string) {
+		return this.request<T>(
+			path,
+			{
+				method: "POST",
+				body: body !== undefined ? JSON.stringify(body) : undefined,
+			},
+			tokenOverride,
+		);
 	}
 
 	put<T>(path: string, body?: unknown) {
-		return this.request<T>(path, { method: "PUT", body: JSON.stringify(body) });
+		return this.request<T>(path, {
+			method: "PUT",
+			body: JSON.stringify(body),
+		});
 	}
 
 	patch<T>(path: string, body?: unknown) {
