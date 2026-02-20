@@ -15,6 +15,7 @@ import type {
 	CampaignDetail,
 	AuditLog,
 	PaginatedResponse,
+	AdminStatistics,
 } from "@/types";
 
 // --- Generic fetcher ---
@@ -196,7 +197,27 @@ export function useAuditLogs(
 }
 
 export function useAdminStatistics(config?: SWRConfiguration) {
-	return useSWR("/v1/admin/statistics", fetcher, config);
+	return useSWR<AdminStatistics>("/v1/admin/statistics", fetcher, config);
+}
+
+// --- Dashboard hooks ---
+
+/** Fetches recent generations for the current user's dashboard */
+export function useDashboardGenerations(config?: SWRConfiguration) {
+	return useSWR<PaginatedResponse<Generation>>(
+		"/v1/generations?per_page=8&page=1",
+		fetcher,
+		{ revalidateOnFocus: false, ...config },
+	);
+}
+
+/** Fetches recent audit logs for activity feed (admin only) */
+export function useDashboardActivity(config?: SWRConfiguration) {
+	return useSWR<PaginatedResponse<AuditLog>>(
+		"/v1/admin/audit-logs?per_page=10&page=1",
+		fetcher,
+		{ revalidateOnFocus: false, ...config },
+	);
 }
 
 // --- Persona & Category presets ---

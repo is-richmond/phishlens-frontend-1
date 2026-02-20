@@ -178,3 +178,29 @@ export interface PaginatedResponse<T> {
 	page: number;
 	per_page: number;
 }
+
+// --- Admin Statistics ---
+
+export interface AdminStatistics {
+	users: {
+		total: number;
+		active: number;
+		suspended: number;
+		admins: number;
+		researchers: number;
+	};
+	generations: {
+		total: number;
+		scored: number;
+		unscored: number;
+		average_score: number | null;
+		min_score: number | null;
+		max_score: number | null;
+		score_distribution: Record<string, number>;
+	};
+	models: Record<string, number>;
+	categories: Record<string, number>;
+	scenarios: { total: number };
+	campaigns: { total: number };
+	templates: { total: number; predefined: number; custom: number };
+}
