@@ -116,12 +116,53 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	}, [refreshUser]);
 
 	// Redirect unauthenticated users away from protected routes
+	// AND redirect authenticated users away from auth pages
 	useEffect(() => {
 		if (isLoading) return;
-		if (!isAuthenticated && !PUBLIC_ROUTES.includes(pathname)) {
+
+		const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
+
+		if (!isAuthenticated && !isPublicRoute) {
 			router.push("/login");
+		} else if (
+			isAuthenticated &&
+			(pathname === "/login" || pathname === "/register")
+		) {
+			router.push("/dashboard");
 		}
 	}, [isLoading, isAuthenticated, pathname, router]);
+
+	// Show a loading screen while resolving auth state
+	if (isLoading) {
+		return (
+			<div className='flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-900'>
+				<div className='flex flex-col items-center gap-3'>
+					<svg
+						className='h-10 w-10 animate-spin text-primary-600'
+						viewBox='0 0 24 24'
+						fill='none'
+					>
+						<circle
+							className='opacity-25'
+							cx='12'
+							cy='12'
+							r='10'
+							stroke='currentColor'
+							strokeWidth='4'
+						/>
+						<path
+							className='opacity-75'
+							fill='currentColor'
+							d='M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z'
+						/>
+					</svg>
+					<p className='text-sm text-slate-500 dark:text-slate-400'>
+						Loading PhishLens…
+					</p>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<AuthContext.Provider
