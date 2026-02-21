@@ -41,6 +41,11 @@ htmlcov/
 .coverage
 coverage/
 
+# Playwright
+playwright-report/
+test-results/
+blob-report/
+
 # Logs
 *.log
 
