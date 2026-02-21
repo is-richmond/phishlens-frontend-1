@@ -23,7 +23,7 @@ export default function LoginPage() {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors, isSubmitting },
+		formState: { errors, isSubmitting, isValid },
 	} = useForm<LoginFormData>({
 		resolver: zodResolver(loginSchema),
 		defaultValues: { email: "", password: "" },
@@ -101,7 +101,12 @@ export default function LoginPage() {
 					{...register("password")}
 				/>
 
-				<Button type='submit' isLoading={isSubmitting} className='w-full'>
+				<Button
+					type='submit'
+					isLoading={isSubmitting}
+					className='w-full'
+					disabled={isSubmitting || !isValid}
+				>
 					<LogIn className='w-4 h-4' />
 					Sign In
 				</Button>

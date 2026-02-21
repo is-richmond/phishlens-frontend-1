@@ -41,7 +41,7 @@ export default function RegisterPage() {
 		register,
 		handleSubmit,
 		watch,
-		formState: { errors, isSubmitting },
+		formState: { errors, isSubmitting, isValid },
 	} = useForm<RegisterFormData>({
 		resolver: zodResolver(registerSchema),
 		defaultValues: {
@@ -209,7 +209,12 @@ export default function RegisterPage() {
 						{...register("terms_accepted")}
 					/>
 
-					<Button type='submit' isLoading={isSubmitting} className='w-full'>
+					<Button
+						type='submit'
+						isLoading={isSubmitting}
+						className='w-full'
+						disabled={isSubmitting || !isValid}
+					>
 						<UserPlus className='w-4 h-4' />
 						Create Account
 					</Button>
