@@ -54,7 +54,7 @@ export default function GeneratePage() {
 	// Generation parameters
 	const [temperature, setTemperature] = useState(0.7);
 	const [maxTokens, setMaxTokens] = useState(1024);
-	const [modelVariant, setModelVariant] = useState("gemini-2.0-flash");
+	const [modelVariant, setModelVariant] = useState("gemini-2.5-flash-lite");
 
 	const handleSelectScenario = (scenario: Scenario) => {
 		setSelectedScenario(scenario);
@@ -660,9 +660,11 @@ function ConfigurePanel({
 								onChange={(e) => onModelVariantChange(e.target.value)}
 								className='w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-white outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20'
 							>
-								<option value='gemini-2.0-flash'>Gemini 2.0 Flash</option>
-								<option value='gemini-2.5-pro'>Gemini 2.5 Pro</option>
+								<option value='gemini-2.5-flash-lite'>
+									Gemini 2.5 Flash-Lite
+								</option>
 								<option value='gemini-2.5-flash'>Gemini 2.5 Flash</option>
+								<option value='gemini-2.5-pro'>Gemini 2.5 Pro</option>
 							</select>
 						</div>
 					</div>

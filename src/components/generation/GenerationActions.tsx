@@ -55,7 +55,7 @@ export function GenerationActions({
 		(inputParams.max_tokens as number) ?? 1024,
 	);
 	const [modelVariant, setModelVariant] = useState(
-		(inputParams.model_variant as string) ?? "gemini-2.0-flash",
+		(inputParams.model_variant as string) ?? "gemini-2.5-flash-lite",
 	);
 
 	const handleRegenerate = () => {
@@ -220,9 +220,11 @@ export function GenerationActions({
 								onChange={(e) => setModelVariant(e.target.value)}
 								className='w-full rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-2.5 py-1.5 text-xs text-slate-900 dark:text-white outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/30'
 							>
-								<option value='gemini-2.0-flash'>Gemini 2.0 Flash</option>
-								<option value='gemini-2.5-pro'>Gemini 2.5 Pro</option>
+								<option value='gemini-2.5-flash-lite'>
+									Gemini 2.5 Flash-Lite
+								</option>
 								<option value='gemini-2.5-flash'>Gemini 2.5 Flash</option>
+								<option value='gemini-2.5-pro'>Gemini 2.5 Pro</option>
 							</select>
 						</div>
 					</div>
