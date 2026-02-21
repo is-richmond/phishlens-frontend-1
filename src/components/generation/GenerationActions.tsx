@@ -10,7 +10,6 @@ import {
 	ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { api } from "@/lib/api";
 import { Button } from "@/components/ui/FormElements";
 import type { Generation, ExportFormat } from "@/types";
 
@@ -70,19 +69,27 @@ export function GenerationActions({
 	const handleExport = async (format: ExportFormat) => {
 		setExporting(true);
 		try {
-			const response = await api.post<Blob>("/v1/export", {
-				generation_ids: [generation.id],
-				format,
+			// Use fetch directly — the normal api client always parses JSON,
+			// but CSV/EML responses are plain text / binary streams.
+			const token = localStorage.getItem("phishlens-token");
+			const baseUrl = process.env.NEXT_PUBLIC_API_URL || "/api";
+			const res = await fetch(`${baseUrl}/v1/export`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					...(token ? { Authorization: `Bearer ${token}` } : {}),
+				},
+				body: JSON.stringify({
+					generation_ids: [generation.id],
+					format,
+				}),
 			});
-			// Trigger download
-			const blob = new Blob([JSON.stringify(response)], {
-				type:
-					format === "json"
-						? "application/json"
-						: format === "csv"
-							? "text/csv"
-							: "message/rfc822",
-			});
+
+			if (!res.ok) {
+				throw new Error("Export failed");
+			}
+
+			const blob = await res.blob();
 			const url = URL.createObjectURL(blob);
 			const a = document.createElement("a");
 			a.href = url;
