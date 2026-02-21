@@ -140,7 +140,7 @@ export function StepFormat({ form }: StepFormatProps) {
 			<FormTextarea
 				label='Scenario Description'
 				placeholder='Optional notes or description for this scenario…'
-				hint='Internal notes visible only to you — won't be sent to the LLM.'
+				hint="Internal notes visible only to you — won't be sent to the LLM."
 				rows={3}
 				error={errors.description?.message}
 				{...register("description")}

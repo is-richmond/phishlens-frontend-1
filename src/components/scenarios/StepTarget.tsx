@@ -104,7 +104,7 @@ export function StepTarget({ form, personaPresets, isLoadingPresets }: StepTarge
 			{/* Organization context */}
 			<FormTextarea
 				label='Organization Context'
-				placeholder='Describe the target organization's industry, size, culture, or any specific details that should be reflected in the phishing message…'
+				placeholder="Describe the target organization's industry, size, culture, or any specific details that should be reflected in the phishing message…"
 				hint='Optional — helps the LLM generate more realistic, context-aware messages.'
 				rows={4}
 				error={errors.organization_context?.message}
