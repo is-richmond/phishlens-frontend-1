@@ -30,10 +30,7 @@ function fetcher<T>(path: string): Promise<T> {
 // --- Auth hooks ---
 
 export function useCurrentUser(config?: SWRConfiguration) {
-	return useSWR<User>("/v1/auth/me", fetcher, {
-		revalidateOnFocus: false,
-		...config,
-	});
+	return useSWR<User>("/v1/auth/me", fetcher, config);
 }
 
 // --- Scenario hooks ---
@@ -221,7 +218,7 @@ export function useDashboardGenerations(config?: SWRConfiguration) {
 	return useSWR<PaginatedResponse<Generation>>(
 		"/v1/generations?per_page=8&page=1",
 		fetcher,
-		{ revalidateOnFocus: false, ...config },
+		config,
 	);
 }
 
@@ -230,7 +227,7 @@ export function useDashboardActivity(config?: SWRConfiguration) {
 	return useSWR<PaginatedResponse<AuditLog>>(
 		"/v1/admin/audit-logs?per_page=10&page=1",
 		fetcher,
-		{ revalidateOnFocus: false, ...config },
+		config,
 	);
 }
 

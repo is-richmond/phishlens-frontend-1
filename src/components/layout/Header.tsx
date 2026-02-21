@@ -21,6 +21,7 @@ const ROUTE_LABELS: Record<string, string> = {
 	templates: "Templates",
 	generate: "Generate",
 	campaigns: "Campaigns",
+	settings: "Settings",
 	admin: "Admin",
 	users: "Users",
 	"audit-logs": "Audit Logs",
@@ -55,7 +56,7 @@ export default function Header() {
 	}, []);
 
 	return (
-		<header className='h-16 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-6 shrink-0'>
+		<header className='h-16 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between pl-16 pr-6 lg:px-6 shrink-0'>
 			{/* Breadcrumbs */}
 			<nav className='flex items-center text-sm' aria-label='Breadcrumb'>
 				{breadcrumbs.map((crumb, i) => (
