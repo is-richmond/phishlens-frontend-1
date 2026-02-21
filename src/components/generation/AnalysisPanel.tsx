@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown, ChevronUp, FileText } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 
 /* ────────────────────────────────────────────────────────────
@@ -63,8 +64,8 @@ export function AnalysisPanel({
 				)}
 			>
 				<div className='px-4 py-3 border-t border-slate-100 dark:border-slate-700/50'>
-					<div className='prose prose-sm dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed'>
-						{analysis}
+					<div className='prose prose-sm dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 leading-relaxed'>
+						<ReactMarkdown>{analysis}</ReactMarkdown>
 					</div>
 				</div>
 			</div>
