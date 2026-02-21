@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 
@@ -12,13 +12,34 @@ interface MobileOverlayProps {
 
 /**
  * Mobile overlay for sidebar on small screens.
- * Renders as a full-screen overlay with slide-in animation.
+ * Uses a two-phase mount: `visible` keeps the DOM present while `animate`
+ * drives the CSS transition so the backdrop fades and the panel slides in.
  */
 export default function MobileOverlay({
 	open,
 	onClose,
 	children,
 }: MobileOverlayProps) {
+	const [visible, setVisible] = useState(false);
+	const [animate, setAnimate] = useState(false);
+
+	// Opening: mount first, then trigger animation on next frame.
+	// Closing: remove animation class, then unmount after transition ends.
+	useEffect(() => {
+		if (open) {
+			setVisible(true);
+			// requestAnimationFrame ensures the element is in the DOM before
+			// the transition-triggering class is applied.
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => setAnimate(true));
+			});
+		} else {
+			setAnimate(false);
+			const timer = setTimeout(() => setVisible(false), 300); // match duration
+			return () => clearTimeout(timer);
+		}
+	}, [open]);
+
 	// Prevent body scroll when open
 	useEffect(() => {
 		if (open) {
@@ -40,17 +61,25 @@ export default function MobileOverlay({
 		return () => document.removeEventListener("keydown", handler);
 	}, [open, onClose]);
 
-	if (!open) return null;
+	if (!visible) return null;
 
 	return (
 		<div className='fixed inset-0 z-50 lg:hidden'>
 			{/* Backdrop */}
 			<div
-				className='absolute inset-0 bg-slate-900/50 backdrop-blur-sm'
+				className={cn(
+					"absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity duration-300 ease-out",
+					animate ? "opacity-100" : "opacity-0",
+				)}
 				onClick={onClose}
 			/>
 			{/* Sidebar content */}
-			<div className='absolute left-0 top-0 h-full w-60 bg-white dark:bg-slate-800 shadow-xl'>
+			<div
+				className={cn(
+					"absolute left-0 top-0 h-full w-60 bg-white dark:bg-slate-800 shadow-xl transition-transform duration-300 ease-out",
+					animate ? "translate-x-0" : "-translate-x-full",
+				)}
+			>
 				<div className='absolute right-2 top-4'>
 					<button
 						onClick={onClose}
