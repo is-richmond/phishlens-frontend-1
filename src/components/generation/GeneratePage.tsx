@@ -20,6 +20,7 @@ import {
 	GenerationResult,
 	GenerationResultSkeleton,
 } from "@/components/generation/GenerationResult";
+import { AddToCampaignModal } from "@/components/generation/AddToCampaignModal";
 import type { Scenario, Template, Generation } from "@/types";
 
 /* ────────────────────────────────────────────────────────────
@@ -50,6 +51,7 @@ export default function GeneratePage() {
 	const [generation, setGeneration] = useState<Generation | null>(null);
 	const [isGenerating, setIsGenerating] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [showCampaignModal, setShowCampaignModal] = useState(false);
 
 	// Generation parameters
 	const [temperature, setTemperature] = useState(0.7);
@@ -115,7 +117,9 @@ export default function GeneratePage() {
 	};
 
 	const handleAddToCampaign = () => {
-		// Campaign flow will be implemented in Sprint 3.7
+		if (generation) {
+			setShowCampaignModal(true);
+		}
 	};
 
 	const handleReset = () => {
@@ -233,6 +237,15 @@ export default function GeneratePage() {
 			)}
 			{step === "result" && isGenerating && !generation && (
 				<GenerationResultSkeleton />
+			)}
+
+			{/* Add to Campaign modal */}
+			{showCampaignModal && generation && (
+				<AddToCampaignModal
+					generationId={generation.id}
+					onClose={() => setShowCampaignModal(false)}
+					onSuccess={() => setShowCampaignModal(false)}
+				/>
 			)}
 		</div>
 	);
