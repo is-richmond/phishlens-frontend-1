@@ -207,8 +207,12 @@ export function useAuditLogs(
 	);
 }
 
-export function useAdminStatistics(config?: SWRConfiguration) {
-	return useSWR<AdminStatistics>("/v1/admin/statistics", fetcher, config);
+export function useAdminStatistics(enabled = true, config?: SWRConfiguration) {
+	return useSWR<AdminStatistics>(
+		enabled ? "/v1/admin/statistics" : null,
+		fetcher,
+		config,
+	);
 }
 
 // --- Dashboard hooks ---
@@ -223,9 +227,12 @@ export function useDashboardGenerations(config?: SWRConfiguration) {
 }
 
 /** Fetches recent audit logs for activity feed (admin only) */
-export function useDashboardActivity(config?: SWRConfiguration) {
+export function useDashboardActivity(
+	enabled = true,
+	config?: SWRConfiguration,
+) {
 	return useSWR<PaginatedResponse<AuditLog>>(
-		"/v1/admin/audit-logs?per_page=10&page=1",
+		enabled ? "/v1/admin/audit-logs?per_page=10&page=1" : null,
 		fetcher,
 		config,
 	);

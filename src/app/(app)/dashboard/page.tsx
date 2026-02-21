@@ -30,14 +30,10 @@ export default function DashboardPage() {
 	});
 	const { data: generationsData, isLoading: generationsLoading } =
 		useDashboardGenerations();
-	const { data: statsData, isLoading: statsLoading } = useAdminStatistics({
-		// Only fetch if admin
-		...(isAdmin ? {} : { revalidateOnMount: false }),
-	});
+	const { data: statsData, isLoading: statsLoading } =
+		useAdminStatistics(isAdmin);
 	const { data: activityData, isLoading: activityLoading } =
-		useDashboardActivity({
-			...(isAdmin ? {} : { revalidateOnMount: false }),
-		});
+		useDashboardActivity(isAdmin);
 
 	// Derive stats
 	const totalScenarios =
