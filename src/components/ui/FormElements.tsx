@@ -15,7 +15,10 @@ export interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
-	({ label, error, icon, rightElement, className, id, ...props }, ref) => {
+	(
+		{ label, error, icon, rightElement, className, id, disabled, ...props },
+		ref,
+	) => {
 		const inputId = id || label.toLowerCase().replace(/\s+/g, "-");
 
 		return (
@@ -42,10 +45,13 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
 							error
 								? "border-danger-500 focus:border-danger-500 focus:ring-2 focus:ring-danger-500/20"
 								: "border-slate-300 dark:border-slate-600 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20",
+							disabled &&
+								"bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed",
 							className,
 						)}
 						aria-invalid={!!error}
 						aria-describedby={error ? `${inputId}-error` : undefined}
+						disabled={disabled}
 						{...props}
 					/>
 					{rightElement && (
