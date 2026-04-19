@@ -30,7 +30,7 @@ export const bulkGenerationApi = {
     if (description) formData.append("description", description);
 
     return api.uploadFile<BulkGenerationUploadResponse>(
-      "v1/bulk-generations/upload",
+      "/v1/bulk-generations/upload",
       formData,
     );
   },
@@ -40,7 +40,7 @@ export const bulkGenerationApi = {
    */
   async getDetails(bulkGenerationId: string): Promise<BulkGenerationDetail> {
     return api.get<BulkGenerationDetail>(
-      `v1/bulk-generations/${bulkGenerationId}`,
+      `/v1/bulk-generations/${bulkGenerationId}`,
     );
   },
 
@@ -52,7 +52,7 @@ export const bulkGenerationApi = {
     fieldMapping: FieldMapping,
   ): Promise<BulkGenerationDetail> {
     return api.patch<BulkGenerationDetail>(
-      `v1/bulk-generations/${bulkGenerationId}/field-mapping`,
+      `/v1/bulk-generations/${bulkGenerationId}/field-mapping`,
       { field_mapping: fieldMapping },
     );
   },
@@ -67,7 +67,7 @@ export const bulkGenerationApi = {
     modelVariant?: string,
   ): Promise<{ status: string; message: string; bulk_generation_id: string }> {
     return api.post(
-      `v1/bulk-generations/${bulkGenerationId}/generate`,
+      `/v1/bulk-generations/${bulkGenerationId}/generate`,
       {
         temperature,
         max_tokens: maxTokens,
@@ -83,7 +83,7 @@ export const bulkGenerationApi = {
     bulkGenerationId: string,
   ): Promise<BulkGenerationProgressResponse> {
     return api.get<BulkGenerationProgressResponse>(
-      `v1/bulk-generations/${bulkGenerationId}/progress`,
+      `/v1/bulk-generations/${bulkGenerationId}/progress`,
     );
   },
 
@@ -96,7 +96,7 @@ export const bulkGenerationApi = {
     perPage: number = 20,
   ): Promise<BulkGenerationResultsResponse> {
     return api.get<BulkGenerationResultsResponse>(
-      `v1/bulk-generations/${bulkGenerationId}/results`,
+      `/v1/bulk-generations/${bulkGenerationId}/results`,
       { page, per_page: perPage },
     );
   },
@@ -106,7 +106,7 @@ export const bulkGenerationApi = {
    */
   async exportResults(bulkGenerationId: string): Promise<void> {
     return api.downloadFile(
-      `v1/bulk-generations/${bulkGenerationId}/results/export`,
+      `/v1/bulk-generations/${bulkGenerationId}/results/export`,
       `bulk_results_${bulkGenerationId}.xlsx`,
     );
   },
@@ -115,7 +115,7 @@ export const bulkGenerationApi = {
    * Delete bulk generation campaign
    */
   async delete(bulkGenerationId: string): Promise<{ message: string }> {
-    return api.delete(`v1/bulk-generations/${bulkGenerationId}`);
+    return api.delete(`/v1/bulk-generations/${bulkGenerationId}`);
   },
 
   /**
@@ -135,7 +135,7 @@ export const bulkGenerationApi = {
     message: string;
   }> {
     return api.post(
-      `/bulk-generations/${bulkGenerationId}/distribute`,
+      `/v1/bulk-generations/${bulkGenerationId}/distribute`,
       options,
     );
   },
