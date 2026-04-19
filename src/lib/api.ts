@@ -112,6 +112,70 @@ class ApiClient {
 	delete<T>(path: string) {
 		return this.request<T>(path, { method: "DELETE" });
 	}
+
+	async uploadFile<T>(
+		path: string,
+		formData: FormData,
+		tokenOverride?: string,
+	): Promise<T> {
+		const url = new URL(`${this.baseUrl}${path}`, window.location.origin);
+		const token = tokenOverride || this.getToken();
+		const headers: Record<string, string> = {
+			...(tokenOverride ? {} : {}),
+		};
+		if (token) {
+			headers["Authorization"] = `Bearer ${token}`;
+		}
+
+		const response = await fetch(url.toString(), {
+			method: "POST",
+			credentials: "include",
+			headers,
+			body: formData,
+		});
+
+		if (!response.ok) {
+			const error = await response
+				.json()
+				.catch(() => ({ detail: "Unknown error" }));
+			throw new ApiError(response.status, error.detail || "Upload failed");
+		}
+
+		return response.json();
+	}
+
+	async downloadFile(
+		path: string,
+		filename: string,
+		tokenOverride?: string,
+	): Promise<void> {
+		const url = new URL(`${this.baseUrl}${path}`, window.location.origin);
+		const token = tokenOverride || this.getToken();
+		const headers: Record<string, string> = {};
+		if (token) {
+			headers["Authorization"] = `Bearer ${token}`;
+		}
+
+		const response = await fetch(url.toString(), {
+			method: "GET",
+			credentials: "include",
+			headers,
+		});
+
+		if (!response.ok) {
+			throw new ApiError(response.status, "Download failed");
+		}
+
+		const blob = await response.blob();
+		const downloadUrl = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = downloadUrl;
+		a.download = filename;
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(downloadUrl);
+	}
 }
 
 export class ApiError extends Error {
