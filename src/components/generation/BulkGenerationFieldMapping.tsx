@@ -38,7 +38,7 @@ export default function BulkGenerationFieldMapping({
   onBack,
 }: BulkGenerationFieldMappingProps) {
   const { data: bulkGen, mutate } = useSWR<BulkGenerationDetail>(
-    `/bulk-generations/${bulkGenerationId}`,
+    `/v1/bulk-generations/${bulkGenerationId}`,
     fetcher,
   );
 

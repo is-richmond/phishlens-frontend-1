@@ -33,7 +33,7 @@ export default function BulkGenerationResults({
   const [distributionSuccess, setDistributionSuccess] = useState(false);
 
   const { data: results, isLoading } = useSWR<BulkGenerationResultsResponse>(
-    `/bulk-generations/${bulkGenerationId}/results?page=${page}&per_page=${perPage}`,
+    `/v1/bulk-generations/${bulkGenerationId}/results?page=${page}&per_page=${perPage}`,
     fetcher,
     { revalidateOnFocus: false },
   );
