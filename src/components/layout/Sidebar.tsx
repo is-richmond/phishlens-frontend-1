@@ -32,6 +32,8 @@ const NAV_ITEMS: NavItem[] = [
 	{ label: "Templates", href: "/templates", icon: BookTemplate },
 	{ label: "Generate", href: "/generate", icon: Zap },
 	{ label: "Campaigns", href: "/campaigns", icon: FolderKanban },
+	{ label: "Bulk Generation", href: "/bulk-generation", icon: Shield },
+	{ label: "Settings", href: "/settings", icon: Users },
 ];
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
