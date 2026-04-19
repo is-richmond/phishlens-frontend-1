@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
+import { api } from '@/lib/api';
 import { bulkGenerationApi } from '@/lib/bulk-generation';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -9,6 +10,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { AlertCircle, ArrowRight } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { BulkGenerationDetail, FieldMapping } from '@/types/bulk-generation';
+
+function fetcher<T>(path: string): Promise<T> {
+  return api.get<T>(path);
+}
 
 interface BulkGenerationFieldMappingProps {
   bulkGenerationId: string;
@@ -33,7 +38,8 @@ export default function BulkGenerationFieldMapping({
   onBack,
 }: BulkGenerationFieldMappingProps) {
   const { data: bulkGen, mutate } = useSWR<BulkGenerationDetail>(
-    `/api/v1/bulk-generations/${bulkGenerationId}`,
+    `/bulk-generations/${bulkGenerationId}`,
+    fetcher,
   );
 
   const [fieldMapping, setFieldMapping] = useState<FieldMapping>({});

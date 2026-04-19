@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import useSWR from 'swr';
+import { api } from '@/lib/api';
 import { bulkGenerationApi } from '@/lib/bulk-generation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +10,10 @@ import { AlertCircle, Download, ChevronLeft, ChevronRight, CheckCircle, XCircle,
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import DistributionModal from './DistributionModal';
 import type { BulkGenerationResultsResponse } from '@/types/bulk-generation';
+
+function fetcher<T>(path: string): Promise<T> {
+  return api.get<T>(path);
+}
 
 interface BulkGenerationResultsProps {
   bulkGenerationId: string;
@@ -28,7 +33,8 @@ export default function BulkGenerationResults({
   const [distributionSuccess, setDistributionSuccess] = useState(false);
 
   const { data: results, isLoading } = useSWR<BulkGenerationResultsResponse>(
-    `/api/v1/bulk-generations/${bulkGenerationId}/results?page=${page}&per_page=${perPage}`,
+    `/bulk-generations/${bulkGenerationId}/results?page=${page}&per_page=${perPage}`,
+    fetcher,
     { revalidateOnFocus: false },
   );
 
