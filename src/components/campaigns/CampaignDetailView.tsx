@@ -46,6 +46,12 @@ export function CampaignDetailView({
 	const [removing, setRemoving] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
 
+	console.log('CampaignDetailView rendered:', {
+		campaignId,
+		isLoading,
+		campaign: campaign ? { id: campaign.id, name: campaign.name, gen_count: campaign.total_generations } : null,
+	});
+
 	const generations = campaign?.generations ?? [];
 
 	const allSelected =

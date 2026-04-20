@@ -7,7 +7,7 @@ import { bulkGenerationApi } from '@/lib/bulk-generation';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
-import { AlertCircle, ArrowRight } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { BulkGenerationDetail, FieldMapping } from '@/types/bulk-generation';
 
@@ -30,6 +30,18 @@ const COMMON_PLACEHOLDERS = [
   '[SENDER_NAME]',
   '[SENDER_EMAIL]',
   '[SENDER_TITLE]',
+  '[DELIVERY_SERVICE]',
+  '[TRACKING_NUMBER]',
+  '[PACKAGE_ID]',
+  '[ORDER_NUMBER]',
+  '[INVOICE_NUMBER]',
+  '[DATE]',
+  '[TIME]',
+  '[VERIFICATION_LINK]',
+  '[CONFIRMATION_CODE]',
+  '[REFERENCE_NUMBER]',
+  '[BANK_NAME]',
+  '[ACCOUNT_NUMBER]',
 ];
 
 export default function BulkGenerationFieldMapping({
@@ -49,7 +61,23 @@ export default function BulkGenerationFieldMapping({
 
   useEffect(() => {
     if (bulkGen) {
-      setFieldMapping(bulkGen.field_mapping || {});
+      // Initialize fieldMapping with all columns
+      // Use provided field_mapping or create empty entries for all columns
+      const mapping: FieldMapping = {};
+      bulkGen.column_headers.forEach((_, idx) => {
+        mapping[String(idx)] = bulkGen.field_mapping?.[String(idx)] || '';
+      });
+      setFieldMapping(mapping);
+      
+      console.log('BulkGen loaded:', {
+        filename: bulkGen.original_filename,
+        columns: bulkGen.column_headers,
+        columnCount: bulkGen.column_headers.length,
+        previewRowsCount: bulkGen.preview_rows.length,
+        previewRows: bulkGen.preview_rows,
+        fieldMapping: mapping,
+        totalRows: bulkGen.total_rows,
+      });
     }
   }, [bulkGen]);
 
@@ -84,6 +112,43 @@ export default function BulkGenerationFieldMapping({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* File Summary */}
+      {bulkGen && (
+        <Card className="bg-blue-50 border-blue-200">
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <p className="text-sm text-slate-600">Filename</p>
+                <p className="font-semibold text-slate-900">{bulkGen.original_filename}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-600">Total Rows</p>
+                <p className="font-semibold text-slate-900">{bulkGen.total_rows}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-600">Columns</p>
+                <p className="font-semibold text-slate-900">{bulkGen.column_headers.length}</p>
+              </div>
+            </div>
+            {bulkGen.column_headers.length > 0 && (
+              <div className="mt-4">
+                <p className="text-sm text-slate-600 mb-2">Column Headers</p>
+                <div className="flex flex-wrap gap-2">
+                  {bulkGen.column_headers.map((header, idx) => (
+                    <span
+                      key={idx}
+                      className="px-2 py-1 bg-white border border-blue-200 rounded text-sm text-slate-700"
+                    >
+                      {header || `Column ${idx + 1}`}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       <div className="space-y-4">
         <div>
           <h3 className="font-semibold text-slate-900 mb-2">Column Mapping</h3>
@@ -91,67 +156,97 @@ export default function BulkGenerationFieldMapping({
             Map Excel columns to placeholder fields. Select the appropriate placeholder for each column.
           </p>
 
-          {/* Preview Table */}
-          <div className="space-y-3">
-            {Object.entries(fieldMapping).map(([columnIndex, placeholder]) => (
-              <div key={columnIndex} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
-                <span className="text-sm font-medium text-slate-700 min-w-[100px]">
-                  Column {parseInt(columnIndex) + 1}
-                </span>
-
-                <ArrowRight className="w-4 h-4 text-slate-400" />
-
-                {editMode ? (
-                  <select
-                    value={placeholder}
-                    onChange={(e) => handleMappingChange(columnIndex, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">-- Select placeholder --</option>
-                    {COMMON_PLACEHOLDERS.map((p) => (
-                      <option key={p} value={p}>
-                        {p}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <span className="flex-1 px-3 py-2 text-sm text-slate-900 font-medium">
-                    {placeholder || '(not mapped)'}
-                  </span>
-                )}
-              </div>
-            ))}
+          {/* Mapping Table with Preview Data */}
+          <div className="overflow-x-auto border border-slate-200 rounded-lg">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-slate-100 border-b border-slate-200">
+                  <th className="px-4 py-3 text-left font-semibold text-slate-700">Column</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-700">Sample Data</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-700">Maps To</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(fieldMapping).map(([columnIndex, placeholder], idx) => {
+                  const colIdx = parseInt(columnIndex);
+                  const columnHeader = bulkGen.column_headers[colIdx] || `Column ${colIdx + 1}`;
+                  const sampleData = bulkGen.preview_rows[0]?.[columnHeader] || '—';
+                  
+                  return (
+                    <tr key={columnIndex} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'} >
+                      <td className="px-4 py-3 border-b border-slate-200">
+                        <span className="font-medium text-slate-700">{columnHeader}</span>
+                      </td>
+                      <td className="px-4 py-3 border-b border-slate-200 text-slate-600 max-w-xs truncate">
+                        {String(sampleData).substring(0, 100)}
+                      </td>
+                      <td className="px-4 py-3 border-b border-slate-200">
+                        {editMode ? (
+                          <select
+                            value={placeholder}
+                            onChange={(e) => handleMappingChange(columnIndex, e.target.value)}
+                            className="w-full px-2 py-1 border border-slate-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="">-- Select placeholder --</option>
+                            {COMMON_PLACEHOLDERS.map((p) => (
+                              <option key={p} value={p}>
+                                {p}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <span className="text-slate-900 font-medium">
+                            {placeholder || '(not mapped)'}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
 
         {/* Data Preview */}
-        {bulkGen && (
+        {bulkGen && bulkGen.column_headers.length > 0 && (
           <div>
             <h3 className="font-semibold text-slate-900 mb-2">Data Preview</h3>
             <p className="text-sm text-slate-600 mb-3">
-              First row of your Excel file
+              First {Math.min(3, bulkGen.preview_rows.length)} rows of your Excel file
             </p>
             <div className="overflow-x-auto">
               <table className="w-full text-sm border-collapse">
                 <thead>
                   <tr className="bg-slate-100">
-                    <th className="border border-slate-300 px-3 py-2 text-left font-semibold">
-                      Column
-                    </th>
-                    <th className="border border-slate-300 px-3 py-2 text-left font-semibold">
-                      Sample Data
-                    </th>
-                    <th className="border border-slate-300 px-3 py-2 text-left font-semibold">
-                      Maps To
-                    </th>
+                    {bulkGen.column_headers.map((header, idx) => (
+                      <th
+                        key={idx}
+                        className="border border-slate-300 px-3 py-2 text-left font-semibold text-xs"
+                      >
+                        {header || `Column ${idx + 1}`}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {/* This would show preview data from the first row */}
-                  {Object.keys(fieldMapping).length > 0 && (
+                  {bulkGen.preview_rows.length > 0 ? (
+                    bulkGen.preview_rows.map((row, rowIdx) => (
+                      <tr key={rowIdx} className={rowIdx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                        {bulkGen.column_headers.map((header, colIdx) => (
+                          <td
+                            key={colIdx}
+                            className="border border-slate-300 px-3 py-2 text-xs text-slate-700"
+                          >
+                            {String(row[header] || '—').substring(0, 50)}
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) : (
                     <tr>
-                      <td colSpan={3} className="border border-slate-300 px-3 py-2 text-slate-600 text-xs">
-                        Preview data would display here (implement if needed)
+                      <td colSpan={bulkGen.column_headers.length} className="border border-slate-300 px-3 py-2 text-slate-600 text-xs text-center">
+                        No preview data available
                       </td>
                     </tr>
                   )}

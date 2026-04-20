@@ -50,6 +50,8 @@ export interface BulkGenerationDetail {
   scenario_id: string;
   template_id: string | null;
   field_mapping: Record<string, string>;
+  column_headers: string[];
+  preview_rows: Record<string, any>[];
   total_rows: number;
   generated_count: number;
   failed_count: number;
