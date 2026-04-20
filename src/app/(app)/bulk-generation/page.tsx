@@ -54,11 +54,11 @@ export default function BulkGenerationPage() {
 
       {/* Progress Indicator */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           {steps.map((step, index) => (
-            <div key={step.id} className="flex flex-col items-center flex-1">
+            <div key={step.id} className="flex items-center flex-1">
               {/* Step Indicator */}
-              <div className="relative flex items-center">
+              <div className="flex flex-col items-center">
                 <div
                   className={`flex items-center justify-center w-10 h-10 rounded-full text-sm font-semibold transition ${
                     index <= currentStepIndex
@@ -68,15 +68,16 @@ export default function BulkGenerationPage() {
                 >
                   {step.icon}
                 </div>
-                {index < steps.length - 1 && (
-                  <div
-                    className={`absolute left-full top-1/2 h-1 w-12 -translate-y-1/2 transition ${
-                      index < currentStepIndex ? 'bg-blue-600' : 'bg-slate-200'
-                    }`}
-                  />
-                )}
+                <p className="mt-2 text-xs font-medium text-slate-700 text-center">{step.label}</p>
               </div>
-              <p className="mt-2 text-xs font-medium text-slate-700">{step.label}</p>
+              {/* Connecting Line */}
+              {index < steps.length - 1 && (
+                <div
+                  className={`flex-1 h-1 mx-2 transition ${
+                    index < currentStepIndex ? 'bg-blue-600' : 'bg-slate-200'
+                  }`}
+                />
+              )}
             </div>
           ))}
         </div>
