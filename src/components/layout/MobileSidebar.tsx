@@ -16,6 +16,8 @@ import {
 	ScrollText,
 	Menu,
 	Search,
+	Shield,
+
 } from "lucide-react";
 
 const NAV_ITEMS = [
