@@ -1,13 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import BulkGenerationUpload from '@/components/generation/BulkGenerationUpload';
 import BulkGenerationFieldMapping from '@/components/generation/BulkGenerationFieldMapping';
 import BulkGenerationProcessing from '@/components/generation/BulkGenerationProcessing';
 import BulkGenerationResults from '@/components/generation/BulkGenerationResults';
+import { BulkGenerationProgress } from '@/components/generation/BulkGenerationProgress';
 
 type Step = 'upload' | 'mapping' | 'processing' | 'results';
 
@@ -33,14 +32,35 @@ export default function BulkGenerationPage() {
     setBulkGenerationId(null);
   };
 
-  const steps = [
-    { id: 'upload', label: 'Upload File', icon: '📤' },
-    { id: 'mapping', label: 'Map Fields', icon: '🔗' },
-    { id: 'processing', label: 'Generate', icon: '⚙️' },
-    { id: 'results', label: 'Results', icon: '✅' },
-  ];
+  const getStepDescription = () => {
+    switch (currentStep) {
+      case 'upload':
+        return 'Upload an Excel file with recipient data';
+      case 'mapping':
+        return 'Map Excel columns to placeholder fields';
+      case 'processing':
+        return 'Generating messages...';
+      case 'results':
+        return 'View and download generated results';
+      default:
+        return '';
+    }
+  };
 
-  const currentStepIndex = steps.findIndex(s => s.id === currentStep);
+  const getStepTitle = () => {
+    switch (currentStep) {
+      case 'upload':
+        return 'Upload File';
+      case 'mapping':
+        return 'Map Fields';
+      case 'processing':
+        return 'Generate';
+      case 'results':
+        return 'Results';
+      default:
+        return '';
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -53,46 +73,15 @@ export default function BulkGenerationPage() {
       </div>
 
       {/* Progress Indicator */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between gap-2">
-          {steps.map((step, index) => (
-            <div key={step.id} className="flex items-center flex-1">
-              {/* Step Indicator */}
-              <div className="flex flex-col items-center">
-                <div
-                  className={`flex items-center justify-center w-10 h-10 rounded-full text-sm font-semibold transition ${
-                    index <= currentStepIndex
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-slate-200 text-slate-600'
-                  }`}
-                >
-                  {step.icon}
-                </div>
-                <p className="mt-2 text-xs font-medium text-slate-700 text-center">{step.label}</p>
-              </div>
-              {/* Connecting Line */}
-              {index < steps.length - 1 && (
-                <div
-                  className={`flex-1 h-1 mx-2 transition ${
-                    index < currentStepIndex ? 'bg-blue-600' : 'bg-slate-200'
-                  }`}
-                />
-              )}
-            </div>
-          ))}
-        </div>
+      <div>
+        <BulkGenerationProgress currentStep={currentStep} />
       </div>
 
       {/* Steps Content */}
       <Card>
         <CardHeader>
-          <CardTitle>{steps[currentStepIndex].label}</CardTitle>
-          <CardDescription>
-            {currentStep === 'upload' && 'Upload an Excel file with recipient data'}
-            {currentStep === 'mapping' && 'Map Excel columns to placeholder fields'}
-            {currentStep === 'processing' && 'Generating messages...'}
-            {currentStep === 'results' && 'View and download generated results'}
-          </CardDescription>
+          <CardTitle>{getStepTitle()}</CardTitle>
+          <CardDescription>{getStepDescription()}</CardDescription>
         </CardHeader>
         <CardContent>
           {currentStep === 'upload' && (
